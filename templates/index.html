@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task App</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            text-align: center;
+        }
+        form {
+            margin: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 200px;
+        }
+        button {
+            padding: 10px;
+            background: green;
+            color: white;
+            border: none;
+        }
+        .task {
+            background: white;
+            margin: 10px auto;
+            padding: 10px;
+            width: 300px;
+            display: flex;
+            justify-content: space-between;
+        }
+        a {
+            color: red;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Task Manager</h1>
+
+<form method="POST">
+    <input type="text" name="task" placeholder="Enter task" required>
+    <button type="submit">Add</button>
+</form>
+
+{% for task in tasks %}
+<div class="task">
+    {{ task[1] }}
+    <a href="/delete/{{ task[0] }}">Delete</a>
+</div>
+{% endfor %}
+
+</body>
+</html>
