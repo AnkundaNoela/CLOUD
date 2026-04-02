@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Task – Noela's Task Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0f;
+      --card: #16161a;
+      --border: #2a2a30;
+      --accent: #c8a96e;
+      --accent2: #e8c98e;
+      --text: #f0ece4;
+      --muted: #7a7870;
+      --edit: #5c9ee0;
+      --radius: 14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(92,158,224,0.1) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 520px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-bottom: 28px;
+      transition: color 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .back-link:hover { color: var(--accent); }
+
+    .edit-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+    }
+
+    .edit-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+
+    .edit-card .hint {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.97rem;
+      line-height: 1.6;
+      resize: vertical;
+      min-height: 100px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 20px;
+    }
+
+    textarea:focus {
+      border-color: var(--edit);
+      box-shadow: 0 0 0 3px rgba(92,158,224,0.12);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-save {
+      flex: 1;
+      background: linear-gradient(135deg, var(--edit), #3a7abf);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(92,158,224,0.3);
+    }
+
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 22px;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-cancel:hover { border-color: var(--accent); color: var(--accent); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to tasks</a>
+
+    <div class="edit-card">
+      <h2>✏ Edit Task</h2>
+      <p class="hint">Noela's Task Manager &nbsp;·&nbsp; Update your task below</p>
+
+      <form method="POST" action="/edit/{{ task[0] }}">
+        <textarea name="task" required autofocus>{{ task[1] }}</textarea>
+        <div class="btn-row">
+          <button type="submit" class="btn-save">Save Changes</button>
+          <a href="/" class="btn-cancel">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

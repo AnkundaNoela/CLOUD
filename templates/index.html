@@ -1,55 +1,203 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Task App</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #f4f4f4;
-            text-align: center;
-        }
-        form {
-            margin: 20px;
-        }
-        input {
-            padding: 10px;
-            width: 200px;
-        }
-        button {
-            padding: 10px;
-            background: green;
-            color: white;
-            border: none;
-        }
-        .task {
-            background: white;
-            margin: 10px auto;
-            padding: 10px;
-            width: 300px;
-            display: flex;
-            justify-content: space-between;
-        }
-        a {
-            color: red;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Noela's Task Manager</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0f;
+      --card: #16161a;
+      --border: #2a2a30;
+      --accent: #c8a96e;
+      --accent2: #e8c98e;
+      --text: #f0ece4;
+      --muted: #7a7870;
+      --danger: #e05c5c;
+      --edit: #5c9ee0;
+      --radius: 14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(200,169,110,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+
+    .header .crown { font-size: 28px; display: block; margin-bottom: 8px; }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .btn-add {
+      background: var(--accent);
+      border: none;
+      padding: 13px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-item {
+      background: var(--card);
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-actions a {
+      margin-left: 8px;
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+
+    .btn-edit { color: var(--edit); }
+    .btn-delete { color: var(--danger); }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+  </style>
 </head>
+
 <body>
+<div class="container">
 
-<h1>Task Manager</h1>
+  <div class="header">
+    <span class="crown">👑</span>
+    <h1>Noela's Task Manager</h1>
+    <p class="subtitle">Full CRUD App</p>
+  </div>
 
-<form method="POST">
-    <input type="text" name="task" placeholder="Enter task" required>
-    <button type="submit">Add</button>
-</form>
+  <!-- FORM -->
+  <div class="form-card">
+    <form method="POST" action="/">
+      <div class="form-row">
+        <input type="text" name="task" placeholder="Add a new task..." required>
+        <button class="btn-add" type="submit">Add</button>
+      </div>
+    </form>
+  </div>
 
-{% for task in tasks %}
-<div class="task">
-    {{ task[1] }}
-    <a href="/delete/{{ task[0] }}">Delete</a>
+  <!-- STATS -->
+  <div class="stats">
+    <span>Total Tasks</span>
+    <span>{{ tasks|length if tasks else 0 }}</span>
+  </div>
+
+  <!-- TASK LIST -->
+  {% if tasks %}
+    <div class="task-list">
+
+      {% for task in tasks %}
+        {% set task_id = task[0] if task is sequence else task['id'] %}
+        {% set task_text = task[1] if task is sequence else task['task'] %}
+
+        <div class="task-item">
+          <div>
+            <strong>#{{ loop.index }}</strong> {{ task_text }}
+          </div>
+
+          <div class="task-actions">
+            <a class="btn-edit" href="/edit/{{ task_id }}">Edit</a>
+            <a class="btn-delete" href="/delete/{{ task_id }}"
+               onclick="return confirm('Delete this task?')">Delete</a>
+          </div>
+        </div>
+
+      {% endfor %}
+
+    </div>
+  {% else %}
+    <div class="empty">
+      ✨ No tasks yet. Add one above!
+    </div>
+  {% endif %}
+
 </div>
-{% endfor %}
-
 </body>
 </html>
